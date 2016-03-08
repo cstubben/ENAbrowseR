@@ -32,7 +32,7 @@ wgs_set                7      -     243       -
 ```
 
 
-The `usage` dataset lists further details about the result databases, columns for filtering and returnable fields from the [usage page](http://www.ebi.ac.uk/ena/data/warehouse/usage).  
+The `usage` dataset lists further details about the result databases above, columns for filtering and returnable fields.  These tables are also found on the [usage page](http://www.ebi.ac.uk/ena/data/warehouse/usage).  
 
 ```
 data(usage)
@@ -67,7 +67,7 @@ usage$fields$assembly
 ```
 
 
-`ena_search` returns a tab-delimited report in any one of the results listed in the taxonomy portal table.  A valid [search query](http://www.ebi.ac.uk/ena/browse/search-rest) is required, for example, to list all 282 *Y. pestis* assemblies, use `tax_tree(632)`.   
+`ena_search` returns a tab-delimited report from one of the 18 result databases (default is sample).  A valid [search query](http://www.ebi.ac.uk/ena/browse/search-rest) is required, for example, to list all 282 *Y. pestis* assemblies, use `tax_tree(632)`.   
 
 ```
 yp <- ena_search("tax_tree(632)", result= "assembly") 
@@ -79,7 +79,7 @@ table(yp$assembly_level)
 ```
 
 
-By default, `ena_search` will return all 14 fields listed in `usage$fields$assembly`.  You can also specify columns or change the default limit of 10000 records. 
+`ena_search` will return all 14 fields listed in `usage$fields$assembly` by default.  You can also specify columns or change the limit of 10000 records. 
 
 ```
 ena_search("tax_tree(632)", result= "assembly", fields=c("study_accession", "scientific_name"), limit=10, showURL=TRUE) 
@@ -99,7 +99,7 @@ http://www.ebi.ac.uk/ena/data/warehouse/search?query=tax_tree(632)&result=assemb
 10 GCA_000022845      PRJNA36547                    Yersinia pestis Z176003
 ```
 
-This example shows two ways to search for samples in the Galapagos Islands.  By default, empty fields are removed unless drop=FALSE and "sample" is the default result. 
+This example shows two ways to search for samples in the Galapagos Islands.  Empty fields are removed unless drop=FALSE (and the default sample result has 68 total columns). 
 
 ```
 galap1 <- ena_search('country="*Galapagos*"') 
@@ -112,12 +112,13 @@ Dropping 41 empty columns
 ```
 
 
-If you need to download more than 100,000 records, use `offset` to get the next 100,000 records.  `ena_search` also has a `resultcount` option to first count the number of results if needed.   In this example, the 316,311 metagenome samples are combined into a single `data.frame`.  
+If you need to download more than 100,000 records, use `offset` to get the next 100,000 records.  `ena_search` also has a `resultcount` option to count the number of results if needed.   In this example, the 316,311 metagenome samples are combined into a single `data.frame`.  
 
 ```
 ena_taxonomy("metagenomes")
 metagenomes, Taxid:408169
                   direct size   subtree subsize
+...
 sample              2963    -    316311       -
 
 ena_search("tax_tree(408169)", resultcount=TRUE)
@@ -184,7 +185,7 @@ France:Neuves-Maisons        23
 ```
 
 
-Environmenal biomes, features or material often display the [ENVO](http://www.environmentontology.org) ID number like ENVO:01000005, 01000005  or 1000005.  Find matching names in the `envo` dataset using the 8 digit ID.
+Environmenal biomes, features or material often display the [ENVO](http://www.environmentontology.org) ID number only like ENVO:01000005, 01000005  or 1000005.  Find matching names in the `envo` dataset using the 8 digit ID.
 
 ```
 table2(m1$environment_feature)
