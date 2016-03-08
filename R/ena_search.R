@@ -36,14 +36,16 @@ ena_search <- function( query,  result="sample", fields, offset, sortfields, lim
 
      x <- read.delim(url2, stringsAsFactors=FALSE, quote="")
 
+       if(result == "sample"){
+           x$germline[x$germline == "N"]<- NA
+           x$environmental_sample[x$environmental_sample == "N"]<- NA
+       }
+
      if(drop){  
         # drop empty columns
         n  <- apply(x, 2, function(y) all(is.na(y) | y == "")) 
         # and if germline and env. sample are all "N"
-        if(result == "sample"){
-           if(all(x$germline == "N") ) n["germline"] <- TRUE
-           if(all(x$environmental_sample == "N") ) n["environmental_sample"] <- TRUE
-        }
+ 
         if(sum(n)>0){
            message("Dropping ", sum(n) , " empty columns")
            #paste(names(n[n]), collapse=", ")

@@ -202,7 +202,7 @@ subset(envo, id=="01000005")
 
 
 
-Countries are often missing location data to plot on a map.  The `geocode` function in `ggmap` allows users to geocode up to 2500 locations per day using the Google Maps API. 
+Countries are often missing location data to plot on a map, so the `geocode` function in `ggmap` may be used to geocode up to 2500 locations per day. 
 
 ```
 library(ggmap)
@@ -218,7 +218,7 @@ y[,1:5]
 4  92.00000  33.00000 natural_feature approximate qing zang gaoyuan, golmud, haixi, china
 ```
 
-The `add_lat_lon` function will split `location` into new `lat` and `lon` columns for easier plotting in `ggmaps`, `Leaflet` and other packages and will also add geocoded locations for any places with missing coordinates.  
+The `add_lat_lon` function will split `location` into new `lat` and `lon` columns for easier plotting in `ggmap`, `leaflet` and other packages and will also add geocoded locations for any places with missing coordinates.  
 
 ```
 table2(m1$location)
