@@ -79,7 +79,7 @@ table(yp$assembly_level)
 ```
 
 
-`ena_search` will return all 14 fields listed in `usage$fields$assembly` by default.  You can also specify columns or change the limit of 10000 records. 
+`ena_search` will return all 14 fields listed in `usage$fields$assembly` and drop any empty columns by default.  You can also specify columns or change the limit of 10000 records. 
 
 ```
 ena_search("tax_tree(632)", result= "assembly", fields=c("study_accession", "scientific_name"), limit=10, showURL=TRUE) 
