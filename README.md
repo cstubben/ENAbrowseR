@@ -1,5 +1,5 @@
 
-`ENAbrowseR` is an `R` package to search and retrieve data from the [European Nucleotide Archive](http://www.ebi.ac.uk/ena/browse/programmatic-access) Browser REST URL. 
+`ENAbrowseR` is an `R` package to search and retrieve reports from the [European Nucleotide Archive](http://www.ebi.ac.uk/ena/browse/programmatic-access) Browser REST URL. 
 
 ```
 library(devtools)
@@ -32,7 +32,7 @@ wgs_set                7      -     243       -
 ```
 
 
-The `usage` dataset lists further details about the result databases above, columns for filtering and returnable fields.  These tables are also found on the [usage page](http://www.ebi.ac.uk/ena/data/warehouse/usage).  
+The `usage` dataset lists further details about the result databases above, columns for filtering and returnable fields.  These tables are also found on the ENA [usage page](http://www.ebi.ac.uk/ena/data/warehouse/usage).  
 
 ```
 data(usage)
@@ -99,20 +99,8 @@ http://www.ebi.ac.uk/ena/data/warehouse/search?query=tax_tree(632)&result=assemb
 10 GCA_000022845      PRJNA36547                    Yersinia pestis Z176003
 ```
 
-This example shows two ways to search for samples in the Galapagos Islands.  Empty fields are removed unless drop=FALSE (and the default sample result has 68 total columns). 
 
-```
-galap1 <- ena_search('country="*Galapagos*"') 
-Dropping 40 empty columns
-28 rows
-
-galap2 <- ena_search( "geo_circ(-0.587,-90.5713,170)")
-Dropping 41 empty columns
-74 rows
-```
-
-
-If you need to download more than 100,000 records, use `offset` to get the next 100,000 records.  `ena_search` also has a `resultcount` option to count the number of results if needed.   In this example, the 316,311 metagenome samples are combined into a single `data.frame`.  
+If you need to download more than the maximum 100,000 records, use `offset` to get the next 100,000 records (and set DROP=FALSE to keep all 68 columns for merging).  `ena_search` also has a `resultcount` option to count the number of results if needed.   In this example, the 316,311 metagenome samples are combined into a single `data.frame`.  
 
 ```
 ena_taxonomy("metagenomes")
