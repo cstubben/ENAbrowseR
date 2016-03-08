@@ -1,16 +1,22 @@
 
 `ENAbrowseR` is an `R` package to search and retrieve reports from the [European Nucleotide Archive](http://www.ebi.ac.uk/ena/browse/programmatic-access) Browser REST URL. 
 
+###Installation
+
 ```
 library(devtools)
 install_github("cstubben/ENAbrowseR")
 ```
+
+###Usage
 
 The `ena_taxonomy` function returns the [taxonomy portal table](http://www.ebi.ac.uk/ena/browse/taxon-portal-rest) and accepts either a taxonomy ID or name as input. 
 
 ```
 ena_taxonomy("Yersinia pestis")
 Yersinia pestis, Taxid:632
+
+
                   direct   size subtree subsize
 analysis               0      -       0       -
 analysis_study         0      -       0       -
@@ -30,6 +36,26 @@ study                 50      -     192       -
 tsa_set                0      -       0       -
 wgs_set                7      -     243       -
 ```
+
+|                  | direct|size   | subtree|subsize |
+|:-----------------|------:|:------|-------:|:-------|
+|analysis          |      0|-      |       0|-       |
+|analysis_study    |      0|-      |       0|-       |
+|assembly          |     17|80 Mb  |     282|1 Gb    |
+|coding_release    |  56749|52 Mb  |  637112|549 Mb  |
+|coding_update     |      3|2 Kb   |   37902|35 Mb   |
+|noncoding_release |   1267|448 Kb |   12798|3 Mb    |
+|noncoding_update  |      1|490    |     832|333 Kb  |
+|read_experiment   |    254|295 Gb |     406|428 Gb  |
+|read_run          |    254|295 Gb |     427|428 Gb  |
+|read_study        |     20|295 Gb |     104|428 Gb  |
+|read_trace        |      0|-      |  579465|-       |
+|sample            |    219|-      |     359|-       |
+|sequence_release  |   2001|94 Mb  |  189998|1 Gb    |
+|sequence_update   |    131|14 Mb  |     162|56 Mb   |
+|study             |     50|-      |     192|-       |
+|tsa_set           |      0|-      |       0|-       |
+|wgs_set           |      7|-      |     243|-       |
 
 
 The `usage` dataset lists further details about the result databases above, columns for filtering and returnable fields.  These tables are also found on the ENA [usage page](http://www.ebi.ac.uk/ena/data/warehouse/usage).  
