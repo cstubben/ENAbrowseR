@@ -25,8 +25,8 @@ ena_search <- function( query,  result="sample", fields, offset, sortfields, lim
    }else{
      url <- paste0( base_url , "?query=", query, "&result=", result, "&fields=", fields, "&limit=", limit, "&display=report")
 
-     if(!missing(offset)) url <- paste0(url, "&offset", offset )
-     if(!missing(sortfields)) url <- paste0(url, "&sortfields", sortfields )
+     if(!missing(offset)) url <- paste0(url, "&offset=", offset )
+     if(!missing(sortfields)) url <- paste0(url, "&sortfields=", sortfields )
 
      url2 <- URLencode(url)
      if(showURL) message(url2)
