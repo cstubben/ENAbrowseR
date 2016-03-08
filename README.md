@@ -8,9 +8,9 @@ library(devtools)
 install_github("cstubben/ENAbrowseR")
 ```
 
-###Find datasets
+###Search
 
-`ena_taxonomy` returns the number of records and size of each sequence database (total bases) on the ENA [taxonomy page](http://www.ebi.ac.uk/ena/browse/taxon-portal-rest).  The function includes direct hits to the taxa (*Yersinia pestis*) and hits to all descendants (all strains of *Yersinia pestis*) and accepts either a taxonomy ID or name as input. 
+`ena_taxonomy` accepts either a taxonomy ID or name as input and returns the number of records and size of each sequence database (total bases) on the ENA [taxonomy page](http://www.ebi.ac.uk/ena/browse/taxon-portal-rest).  The report includes direct hits to the taxa (*Yersinia pestis*) and hits to all descendants (all strains of *Yersinia pestis*). 
 
 ```
 ena_taxonomy("Yersinia pestis")
@@ -71,9 +71,7 @@ usage$fields$assembly
 [13] "assembly_level"        "genome_representation"
 ```
 
-###Search
-
-`ena_search` returns a tab-delimited report from one of the 18 result databases (default is sample).  A valid [search query](http://www.ebi.ac.uk/ena/browse/search-rest) is required, for example, to list all 282 *Y. pestis* assemblies, use `tax_tree(632)`.   
+`ena_search` returns a tab-delimited report from one of the 18 result databases (default is sample).  A valid [search query](http://www.ebi.ac.uk/ena/browse/search-rest) is required, for example use `tax_tree(632)` to list all 282 *Y. pestis* assemblies.   
 
 ```
 yp <- ena_search("tax_tree(632)", result= "assembly") 
@@ -106,7 +104,7 @@ http://www.ebi.ac.uk/ena/data/warehouse/search?query=tax_tree(632)&result=assemb
 ```
 
 
-If you need to download more than the maximum 100,000 records, use `offset` to get the next 100,000 records (and set drop=FALSE to keep all 68 columns for merging).  `ena_search` also has a `resultcount` option to count the number of results if needed.   In this example, the 316,311 metagenome samples are combined into a single `data.frame`.  
+If you need to download more than the maximum 100,000 records, use `offset` to get the next 100,000 records (and set `drop=FALSE` to keep all 68 columns for merging).  `ena_search` also has a `resultcount` option to count the number of results if needed.   In this example, the 316,311 metagenome samples are combined into a single `data.frame`.  
 
 ```
 ena_taxonomy("metagenomes")
