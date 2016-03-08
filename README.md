@@ -100,7 +100,7 @@ http://www.ebi.ac.uk/ena/data/warehouse/search?query=tax_tree(632)&result=assemb
 ```
 
 
-If you need to download more than the maximum 100,000 records, use `offset` to get the next 100,000 records (and set DROP=FALSE to keep all 68 columns for merging).  `ena_search` also has a `resultcount` option to count the number of results if needed.   In this example, the 316,311 metagenome samples are combined into a single `data.frame`.  
+If you need to download more than the maximum 100,000 records, use `offset` to get the next 100,000 records (and set drop=FALSE to keep all 68 columns for merging).  `ena_search` also has a `resultcount` option to count the number of results if needed.   In this example, the 316,311 metagenome samples are combined into a single `data.frame`.  
 
 ```
 ena_taxonomy("metagenomes")
