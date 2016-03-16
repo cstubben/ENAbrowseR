@@ -16,12 +16,12 @@ ena_taxonomy <- function( id ){
    url <- paste0("http://www.ebi.ac.uk/ena/data/stats/taxonomy/", id)
    x   <- read.table(url, row.names=1, stringsAsFactors=FALSE)
 
-  #Portal View uses Taxon, Bases, Taxon descendants, Bases
-   colnames(x) <- c("direct",  "size" , "subtree" ,  "subsize")
+  #Portal View uses Taxon, Bases, Taxon descendants, Bases (subbases?)
+   colnames(x) <- c("direct",  "bases" , "subtree" ,  "subsize")
    x[x == "N/A"] <- "-"
     # add space before Tb, Gb, Kb, Mb
-   x$size <- gsub("([TGKM])", " \\1", x$size)
-   x$subsize <- gsub("([TGKM])", " \\1", x$subsize)
+   x$bases <- gsub("([TGKM])", " \\1", x$bases)
+   x$subbases <- gsub("([TGKM])", " \\1", x$subbases)
 
    attr(x, "name") <- name
    attr(x, "taxid") <- id
