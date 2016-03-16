@@ -16,28 +16,29 @@ install_github("cstubben/ENAbrowseR")
 ena_taxonomy("Yersinia pestis")
 Yersinia pestis, Taxid:632
 
-                  direct   size subtree subsize
-analysis               0      -       0       -
-analysis_study         0      -       0       -
-assembly              17  80 Mb     282    1 Gb
-coding_release     56749  52 Mb  637112  549 Mb
-coding_update          3   2 Kb   37902   35 Mb
-noncoding_release   1267 448 Kb   12798    3 Mb
-noncoding_update       1    490     832  333 Kb
-read_experiment      254 295 Gb     406  428 Gb
-read_run             254 295 Gb     427  428 Gb
-read_study            20 295 Gb     104  428 Gb
-read_trace             0      -  579465       -
-sample               219      -     359       -
-sequence_release    2001  94 Mb  189998    1 Gb
-sequence_update      131  14 Mb     162   56 Mb
-study                 50      -     192       -
-tsa_set                0      -       0       -
-wgs_set                7      -     243       -
+                  direct  bases subtree subbases
+analysis               0      -       0        -
+analysis_study         0      -       0        -
+assembly              17  80 Mb     282     1 Gb
+coding_release     56749  52 Mb  637112   549 Mb
+coding_update       2161   1 Mb   40060    36 Mb
+noncoding_release   1267 448 Kb   12798     3 Mb
+noncoding_update      69  10 Kb     900   343 Kb
+read_experiment      254 295 Gb     406   428 Gb
+read_run             254 295 Gb     427   428 Gb
+read_study            20 295 Gb     104   428 Gb
+read_trace             0      -  579465        -
+sample               219      -     359        -
+sequence_release    2001  94 Mb  189998     1 Gb
+sequence_update       13  13 Kb      44    42 Mb
+study                 50      -     192        -
+tsa_set                0      -       0        -
+wgs_set                8      -     244        -
+
 ```
 
 
-The `usage` dataset lists further details about the result databases above, columns for filtering and returnable fields.  These tables are also found on the ENA [usage page](http://www.ebi.ac.uk/ena/data/warehouse/usage).  
+The `usage` dataset lists further details about the result databases above, columns available for filtering and returnable fields.  These tables are also found on the ENA [usage page](http://www.ebi.ac.uk/ena/data/warehouse/usage).  
 
 ```
 data(usage)
@@ -129,7 +130,7 @@ mg <- rbind(m1, m2, m3, m4)
 ```
 
 
-The rest of the guide uses a list of metagenome samples released on March 1, 2016.  
+This query returns metagenome samples published on March 1, 2016.  Seventy columns are returned by default (see `usage$field$sample`) and 40 empty columns are removed.
 
 ```
 m1 <- ena_search("tax_tree(408169) AND first_public=2016-03-01")
@@ -156,7 +157,6 @@ country                        20   636
 center_name                    19  1014
 ...
 ```
-
 
 
 `table2` is a wrapper to `table` and displays the sorted results as a `data.frame`
@@ -200,8 +200,6 @@ subset(envo, id=="01000005")
 1297 01000005 upwelling
 ```
 
-
-
 Countries are often missing location data to plot on a map, so the `geocode` function in `ggmap` may be used to geocode up to 2500 locations per day. 
 
 ```
@@ -239,17 +237,81 @@ Geocoding missing locations for
  USA: South Burlington
 ```
 
-Finally, count the number of samples at each location and plot using `ggmap`
+Count the number of samples at each location and plot using `ggmap`.
 
 ```
 x <- aggregate(list(n=m1$lat), m1[, c("lon", "lat")], length)
 
 map <- get_googlemap(c(20,20), zoom=1, size=c(510, 320)  )
-ggmap(map) + geom_point(data = x, alpha = .7, aes(x=lon, y=lat, size = n ),color='red')+ ggtitle("Metagenome samples on March 1, 2016")
+ggmap(map) + geom_point(data = x, alpha = .7, aes(x=lon, y=lat, size = n ),color='red') 
+  + ggtitle("Metagenome samples on March 1, 2016")
+
 ```
 
 ![](mg.png)
 
+
+Try `leaflet` for interactive maps
+
+```
+library(leaflet)
+x <- subset(m1, !is.na(lat))
+popups <- paste0("acc: ", x$secondary_sample_accession, "<br> name: ", x$scientific_name) 
+leaflet(x)  %>% addTiles() %>%  
+   addCircleMarkers( x$lon, x$lat,  clusterOptions =
+   markerClusterOptions(maxClusterRadius=20), radius=2,  popup= popups)
+```
+
+
+
+This final query returns sequencing runs from metagenomes published on March 1, 2016.   In most cases, the runs from a sample are released on the same day, but not always.
+
+```
+r1 <- ena_search("tax_tree(408169) AND first_public=2016-03-01", result="read_run")
+Dropping 5 empty columns
+911 rows
+
+table(r1$sample_accession %in% m1$accession )
+
+FALSE  TRUE 
+   37   874 
+
+table2(r1$study_title)
+                                                                                                                          n
+Changes in the eye microbiota associated with contact lens wearing                                                      325
+Secretions from patients infected with bacteria and viruses raw sequence reads                                          176
+Forest soil from a mature stand in Sala, Middle Sweden cultivar:uncultured fungus Metagenomic assembly                  143
+Rumen Bacteria Raw sequence reads                                                                                        87
+Comparison of samples and mock communities amplified with single-base variations in 515-Forward universal primer         60
+Bacterial biogeography of a High Arctic ice cap                                                                          37
+Changes in rhizosphere bacterial communities induced by the invasive plant Pennisetum setaceum in semiarid environments  30
+suan cai in Northeast China Raw sequence reads                                                                           30
+salt lake microbial community diversity                                                                                  16
+Lejia Lake soil r16S amplicons, raw sequence reads                                                                        4
+```
+
+You can sum the sra or fastq_bytes with `sum_bytes` (and paired libraries have two files that should be split).  The locations of FASTQ files are also included in the table.
+
+```
+sum_bytes(r1$sra_bytes)
+[1] "86 GB"
+
+sum_bytes(as.numeric(unlist(strsplit(r1$fastq_bytes, ";"))))
+[1] "108 GB"
+
+r1$sra_ftp[1:3]
+[1] "ftp.sra.ebi.ac.uk/vol1/fastq/ERR119/000/ERR1198770/ERR1198770.fastq.gz"
+[2] "ftp.sra.ebi.ac.uk/vol1/fastq/ERR119/001/ERR1198771/ERR1198771.fastq.gz"
+[3] "ftp.sra.ebi.ac.uk/vol1/fastq/ERR119/002/ERR1198772/ERR1198772.fastq.gz"
+```
+
+And to plot the number of bases or reads.
+
+```
+hist( log10(r1$base_count ), br=40, col="blue", main="", xlab="Bases (log 10)" )
+```
+
+![](log10.png)
 
 
 
