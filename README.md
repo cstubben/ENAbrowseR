@@ -207,10 +207,14 @@ Countries are often missing location data to plot on a map, so the `geocode` fun
 
 ```
 library(ggmap)
-z1 <-  unique(m1$country[m1$location=="" & m1$country!=""] )
-[1] "USA: South Burlington"       "El Salvador"                 "Peru: Lima"                  "China:Qinghai_tibet_Plateau"
+z <- table2(m1$country[m1$location==""])
+                              n
+El Salvador                 153
+Peru: Lima                   55
+China:Qinghai_tibet_Plateau  16
+USA: South Burlington         3
 
-y <- geocode(z1, output="more")
+y <- geocode(rownames(z), output="more")
 y[,1:5]
         lon       lat            type     loctype                                 address
 1 -73.17096  44.46699        locality approximate               south burlington, vt, usa
@@ -308,7 +312,7 @@ r1$sra_ftp[1:3]
 [3] "ftp.sra.ebi.ac.uk/vol1/fastq/ERR119/002/ERR1198772/ERR1198772.fastq.gz"
 ```
 
-And to plot the number of bases or reads.
+And finally to plot the number of bases or reads.
 
 ```
 hist( log10(r1$base_count ), br=40, col="blue", main="", xlab="Bases (log 10)" )
