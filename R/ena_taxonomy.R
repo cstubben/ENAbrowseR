@@ -21,7 +21,7 @@ ena_taxonomy <- function( id ){
    x[x == "N/A"] <- "-"
     # add space before Tb, Gb, Kb, Mb
    x$bases <- gsub("([TGKM])", " \\1", x$bases)
-   x$subbases <- gsub("([TGKM])", " \\1", x$subbases)
+   x$subsize <- gsub("([TGKM])", " \\1", x$subsize)
 
    attr(x, "name") <- name
    attr(x, "taxid") <- id
