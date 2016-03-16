@@ -8,7 +8,7 @@ library(devtools)
 install_github("cstubben/ENAbrowseR")
 ```
 
-###Search
+###Taxonomy statistics
 
 `ena_taxonomy` accepts either a taxonomy ID or name as input and returns the number of records and size of each sequence database (total bases) on the ENA [taxonomy page](http://www.ebi.ac.uk/ena/browse/taxon-portal-rest).  The report includes direct hits to the taxa (*Yersinia pestis*) and hits to all descendants (all strains of *Yersinia pestis*). 
 
@@ -16,27 +16,27 @@ install_github("cstubben/ENAbrowseR")
 ena_taxonomy("Yersinia pestis")
 Yersinia pestis, Taxid:632
 
-                  direct  bases subtree subbases
-analysis               0      -       0        -
-analysis_study         0      -       0        -
-assembly              17  80 Mb     282     1 Gb
-coding_release     56749  52 Mb  637112   549 Mb
-coding_update       2161   1 Mb   40060    36 Mb
-noncoding_release   1267 448 Kb   12798     3 Mb
-noncoding_update      69  10 Kb     900   343 Kb
-read_experiment      254 295 Gb     406   428 Gb
-read_run             254 295 Gb     427   428 Gb
-read_study            20 295 Gb     104   428 Gb
-read_trace             0      -  579465        -
-sample               219      -     359        -
-sequence_release    2001  94 Mb  189998     1 Gb
-sequence_update       13  13 Kb      44    42 Mb
-study                 50      -     192        -
-tsa_set                0      -       0        -
-wgs_set                8      -     244        -
-
+                  direct  bases subtree subsize
+analysis               0      -       0       -
+analysis_study         0      -       0       -
+assembly              17  80 Mb     282    1 Gb
+coding_release     56749  52 Mb  637112  549 Mb
+coding_update       2161   1 Mb   40060   36 Mb
+noncoding_release   1267 448 Kb   12798    3 Mb
+noncoding_update      69  10 Kb     900  343 Kb
+read_experiment      254 295 Gb     406  428 Gb
+read_run             254 295 Gb     427  428 Gb
+read_study            20 295 Gb     104  428 Gb
+read_trace             0      -  579465       -
+sample               219      -     359       -
+sequence_release    2001  94 Mb  189998    1 Gb
+sequence_update       13  13 Kb      44   42 Mb
+study                 50      -     192       -
+tsa_set                0      -       0       -
+wgs_set                8      -     244       -
 ```
 
+###Sequence/result databases
 
 The `usage` dataset lists further details about the result databases above, columns available for filtering and returnable fields.  These tables are also found on the ENA [usage page](http://www.ebi.ac.uk/ena/data/warehouse/usage).  
 
@@ -67,12 +67,15 @@ subset(usage$columns, grepl("assembly", Result), 1:3)
 129           study_title                  text         brief sequencing study description
 
 usage$fields$assembly
- [1] "accession"             "study_accession"       "sample_accession"      "assembly_name"         "assembly_title"        "study_name"           
- [7] "study_title"           "study_description"     "tax_id"                "scientific_name"       "strain"                "base_count"           
-[13] "assembly_level"        "genome_representation"
+ [1] "accession"             "study_accession"       "sample_accession"      "assembly_name"        
+ [5] "assembly_title"        "study_name"            "study_title"           "study_description"    
+ [9] "tax_id"                "scientific_name"       "strain"                "base_count"           
+[13] "col_tax_id"            "col_scientific_name"   "assembly_level"        "genome_representation"
 ```
 
-`ena_search` returns a tab-delimited report from one of the 18 result databases (default is sample).  A valid [search query](http://www.ebi.ac.uk/ena/browse/search-rest) is required, for example use `tax_tree(632)` to list all 282 *Y. pestis* assemblies.   
+###Search
+
+`ena_search` returns a tab-delimited report from one of the 18 result databases.  A valid [search query](http://www.ebi.ac.uk/ena/browse/search-rest) is required, for example use `tax_tree(632)` to list all 282 *Y. pestis* assemblies.   
 
 ```
 yp <- ena_search("tax_tree(632)", result= "assembly") 
@@ -82,7 +85,6 @@ table(yp$assembly_level)
      chromosome complete genome          contig        scaffold 
               6              32             205              39 
 ```
-
 
 `ena_search` will return all 14 fields listed in `usage$fields$assembly` and drop any empty columns by default.  You can also specify columns or change the limit of 10000 records. 
 
@@ -129,11 +131,12 @@ mg <- rbind(m1, m2, m3, m4)
   63483  12409  11726  28390  64606 114130  21567 
 ```
 
+###Metagenomes
 
 This query returns metagenome samples published on March 1, 2016.  Seventy columns are returned by default (see `usage$field$sample`) and 40 empty columns are removed.
 
 ```
-m1 <- ena_search("tax_tree(408169) AND first_public=2016-03-01")
+m1 <- ena_search("tax_tree(408169) AND first_public=2016-03-01", result="sample")
 Dropping 40 empty columns
 1014 rows
 ```
@@ -251,7 +254,7 @@ ggmap(map) + geom_point(data = x, alpha = .7, aes(x=lon, y=lat, size = n ),color
 ![](mg.png)
 
 
-Try `leaflet` for interactive maps
+or use `leaflet` for interactive maps
 
 ```
 library(leaflet)
