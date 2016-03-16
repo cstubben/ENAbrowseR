@@ -19,7 +19,7 @@ add_lat_lon <- function(x, geocode = TRUE){
    if(geocode){
 
       #countries to geocode
-      z1 <-  sort( unique(m1$country[m1$location=="" & m1$country!=""] ) )
+      z1 <-  sort( unique(x$country[x$location=="" & x$country!=""] ) )
 
       message("Geocoding missing locations for\n ", paste(z1, collapse="\n "))
       z2 <- suppressMessages( geocode(z1, output="more") )

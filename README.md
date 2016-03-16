@@ -245,7 +245,7 @@ Finally, count the number of samples at each location and plot using `ggmap`
 x <- aggregate(list(n=m1$lat), m1[, c("lon", "lat")], length)
 
 map <- get_googlemap(c(20,20), zoom=1, size=c(510, 320)  )
-ggmap(map) + geom_point(data = x, alpha = .7, aes(x=lon, y=lat, size = n+20),color='red')+ ggtitle("Metagenome samples on March 1, 2016")
+ggmap(map) + geom_point(data = x, alpha = .7, aes(x=lon, y=lat, size = n ),color='red')+ ggtitle("Metagenome samples on March 1, 2016")
 ```
 
 ![](mg.png)
