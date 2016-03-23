@@ -248,6 +248,7 @@ Count the number of samples at each location and plot using `ggmap`.
 
 ```
 x <- aggregate(list(n=m1$lat), m1[, c("lon", "lat")], length)
+#x <- group_by(m1, lon, lat) %>% summarize( n=n())     # using dplyr
 
 map <- get_googlemap(c(20,20), zoom=1, size=c(510, 320)  )
 ggmap(map) + geom_point(data = x, alpha = .7, aes(x=lon, y=lat, size = n ),color='red') 

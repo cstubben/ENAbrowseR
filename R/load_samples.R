@@ -2,6 +2,8 @@
 load_samples <- function( file.prefix, drop=TRUE, n = 0.99 ){
 
    x <- list.files(".", pattern= paste0("^", file.prefix ) )
+   x <- x[!grepl("rda$", x)]
+
    nx <- length(x)
    if(nx == 0) stop("No files starting with ", file.prefix)
    y <- vector("list", nx)
@@ -22,10 +24,11 @@ load_samples <- function( file.prefix, drop=TRUE, n = 0.99 ){
    ## drop columns - this is slow
    if(drop){
       nc1 <- ncol(z)
-      # fix columns with "N" for NA
-      z$germline[z$germline=="N"] <- NA
-      z$environmental_sample[z$environmental_sample=="N"] <- NA
-
+      # fix columns with "N" for NA in  SAMPLES only
+      if(names(z)[2] == "secondary_sample_accession"){
+         z$germline[z$germline=="N"] <- NA
+         z$environmental_sample[z$environmental_sample=="N"] <- NA
+      }
       n1 <- apply(z, 2, function(y) sum(is.na(y) | y=="") )
       n2 <- n1/nrow(z) < n
       z <- z[, n2]
