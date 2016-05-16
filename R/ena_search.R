@@ -6,11 +6,7 @@ ena_search <- function( query,  result="sample", fields, offset, sortfields, lim
      if(!exists("usage")) data(usage)
      fields <-  usage$fields[[ result ]]
    }
-   if(drop){
-     # drop Catalogue of Life taxonomy names and ids (tax_id from NCBI and col_tax_id from CoL)
-     fields <- fields[!grepl("^col_", fields)]
-   }
-     fields <- paste(fields, collapse=",")
+    fields <- paste(fields, collapse=",")
  
    base_url <- "http://www.ebi.ac.uk/ena/data/warehouse/search"
 
@@ -44,6 +40,7 @@ if(class(x)=="try-error"){
     x <- NULL
     message("No results found")
 }else{
+print(nrow(x))
       if(result == "sample"){
            if("germline" %in% names(x) )  x$germline[x$germline == "N"]<- NA
            if("environmental_sample" %in% names(x) )  x$environmental_sample[x$environmental_sample == "N"]<- NA
