@@ -36,9 +36,13 @@ ena_search <- function( query,  result="sample", fields, offset, sortfields, lim
 
       x <- read.delim(url2, stringsAsFactors=FALSE, quote="")
 
+if(nrow(x)==0){
+    x <- NULL
+    message("No results found")
+}else{
       if(result == "sample"){
-           x$germline[x$germline == "N"]<- NA
-           x$environmental_sample[x$environmental_sample == "N"]<- NA
+           if("germline" %in% names(x) )  x$germline[x$germline == "N"]<- NA
+           if("environmental_sample" %in% names(x) )  x$environmental_sample[x$environmental_sample == "N"]<- NA
       }
       if(drop){
          nc1 <- ncol(x)
@@ -51,5 +55,6 @@ ena_search <- function( query,  result="sample", fields, offset, sortfields, lim
       attr(x, "url") <- url
       message(nrow(x), " rows")
    }
+}
    x
 }
