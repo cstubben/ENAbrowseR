@@ -36,25 +36,28 @@ ena_search <- function( query,  result="sample", fields, offset, sortfields, lim
 
       x <- try(read.delim(url2, stringsAsFactors=FALSE, quote=""), silent=TRUE)
 
-if(class(x)=="try-error"){
-    x <- NULL
-    message("No results found")
-}else{
-      if(result == "sample"){
-           if("germline" %in% names(x) )  x$germline[x$germline == "N"]<- NA
-           if("environmental_sample" %in% names(x) )  x$environmental_sample[x$environmental_sample == "N"]<- NA
+      if(class(x)=="try-error"){
+         x <- NULL
+         message("Not a valid search query")
+      }else if(nrow(x)==0){
+         x <- NULL
+         message("No results found")
+      }else{
+         if(result == "sample"){
+            if("germline" %in% names(x) )  x$germline[x$germline == "N"]<- NA
+            if("environmental_sample" %in% names(x) )  x$environmental_sample[x$environmental_sample == "N"]<- NA
+         }
+         if(drop){
+            nc1 <- ncol(x)
+            n1 <- apply(x, 2, function(y) sum(is.na(y) | y=="") )
+            n2 <- n1/nrow(x) < n
+            x <- x[, n2]
+            nc2 <- ncol(x)
+            if(nc1 > nc2) message("Dropping ", nc1-nc2, " columns > ", n, " NAs")  
+         }
+         attr(x, "url") <- url
+         message(nrow(x), " rows")
       }
-      if(drop){
-         nc1 <- ncol(x)
-         n1 <- apply(x, 2, function(y) sum(is.na(y) | y=="") )
-         n2 <- n1/nrow(x) < n
-         x <- x[, n2]
-         nc2 <- ncol(x)
-         if(nc1 > nc2) message("Dropping ", nc1-nc2, " columns > ", n, " NAs")  
-      }
-      attr(x, "url") <- url
-      message(nrow(x), " rows")
    }
-}
    x
 }
