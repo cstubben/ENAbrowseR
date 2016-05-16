@@ -40,7 +40,6 @@ ena_search <- function( query,  result="sample", fields, offset, sortfields, lim
          x <- NULL
          message("Not a valid search query")
       }else if(nrow(x)==0){
-         x <- NULL
          message("No results found")
       }else{
          if(result == "sample"){
