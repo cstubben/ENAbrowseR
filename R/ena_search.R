@@ -22,6 +22,10 @@ ena_search <- function( query,  result="sample", fields, offset, sortfields, lim
       # suppress warning about incomplete final line 
       x <- suppressWarnings(readLines(url2))
       x <- x[1]
+      if(is.na(x)){
+          x <- NULL
+          message("No results found")
+       }
    }else{
       url <- paste0( base_url , "?query=", query, "&result=", result, "&fields=", fields, "&limit=", limit, "&display=report")
 
@@ -34,9 +38,9 @@ ena_search <- function( query,  result="sample", fields, offset, sortfields, lim
       # use read_delim in readr?  too many strains are numbers and read_delim only checks the first 1000 rows,
       # x <- read_delim(url2, "\t")
 
-      x <- read.delim(url2, stringsAsFactors=FALSE, quote="")
+      x <- try(read.delim(url2, stringsAsFactors=FALSE, quote=""), silent=TRUE)
 
-if(nrow(x)==0){
+if(class(x)=="try-error"){
     x <- NULL
     message("No results found")
 }else{
