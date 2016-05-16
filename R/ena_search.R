@@ -31,7 +31,7 @@ ena_search <- function( query,  result="sample", fields, offset, sortfields, lim
       url2 <- URLencode(url)
       if(showURL) message(url2)
 
-      # use read_delim in readr?  too many strains are numbers and read_delim only checks the first 1000 rows,
+      # use read_delim in readr?  need to set col_tye for strain
       # x <- read_delim(url2, "\t")
 
       x <- try(read.delim(url2, stringsAsFactors=FALSE, quote=""), silent=TRUE)
@@ -40,7 +40,6 @@ if(class(x)=="try-error"){
     x <- NULL
     message("No results found")
 }else{
-print(nrow(x))
       if(result == "sample"){
            if("germline" %in% names(x) )  x$germline[x$germline == "N"]<- NA
            if("environmental_sample" %in% names(x) )  x$environmental_sample[x$environmental_sample == "N"]<- NA
